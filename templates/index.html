@@ -1,126 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../static/css/app.css" rel="stylesheet" />
-    <link href="../static/css/bootstrap-suggest.css" rel="stylesheet" />
-    <script src="../static/js/jquery-3.4.1.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
-    <script src="../static/js/bootstrap-suggest.js"></script>
-    <script src="../static/js/app.js"></script>
 
-    <link
-      href="https://fonts.googleapis.com/css?family=Josefin+Sans:300|Open+Sans:300|Oxygen|Material+Icons"
-      rel="stylesheet"
-    />
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="../static/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="../static/css/app.css" rel="stylesheet" />
+  <link href="../static/css/bootstrap-suggest.css" rel="stylesheet" />
+  <script src="../static/js/jquery-3.4.1.min.js"></script>
+  <script src="../static/js/bootstrap.min.js"></script>
+  <script src="../static/js/bootstrap-suggest.js"></script>
+  <script src="../static/js/app.js"></script>
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-  <body>
-    <div class="overlay">
-      <div class="spinner-border text-primary" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
+  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300|Open+Sans:300|Oxygen|Material+Icons"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <!-- spinner -->
+  <div class="overlay">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
     </div>
-    <h2>TechTalk DEMO</h2>
-    <div>
-      <div>
-        <div class="task-title">
-          <h3>Next Word Prediction</h3>
-        </div>
-        <div class="form-group">
-          <br />
-          <label for="max_words" id="label_max_words">Top k words: 5</label>
-          <input
-            type="range"
-            class="custom-range"
-            min="1"
-            max="10"
-            value="5"
-            step="1"
-            id="max_words"
-          />
-        </div>
+  </div>
+  <!-- spinner end -->
 
-        <textarea
-          class="form-control txt_input"
-          id="input_text"
-          rows="1"
-        ></textarea>
-
-        <h4>Predictions</h4>
-        <div class="form-row">
-          <div class="form-group col-md-2">
-            <label for="text_paragraphs">BERT</label>
-            <textarea
-              class="form-control txt_response"
-              id="text_bert"
-              readonly
-            ></textarea>
-          </div>
-        </div>
-
-        <div>
-          <div class="task-title">
-            <h3>Masked Word Prediction</h3>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group col-md-8">
-              <br />
-              <h4>
-                Type a sentence, include &lt;mask&gt; to predict the word and
-                hit Predict.
-              </h4>
-            </div>
-            <div class="form-group col-md-2">
-              <br />
-              <label for="max_words" id="label_max_words">Top k words: 5</label>
-              <input
-                type="range"
-                class="custom-range"
-                min="1"
-                max="10"
-                value="5"
-                step="1"
-                id="max_words_mask"
-              />
-            </div>
-            <div class="form-group col-md-2">
-              <label></label>
-              <button
-                type="button"
-                class="btn btn-primary btn-lg btn-block"
-                id="btn-process"
-              >
-                Predict
-              </button>
-            </div>
-          </div>
-          <div class="form-row">
-            <textarea
-              class="form-control txt_input"
-              id="mask_input_text"
-              rows="1"
-            ></textarea>
-          </div>
-
-          <h4>Predictions</h4>
-          <div class="form-row">
-            <div class="form-group col-md-2">
-              <label for="text_paragraphs">BERT</label>
-              <textarea
-                class="form-control txt_response"
-                id="mask_text_bert"
-                readonly
-                rows="1"
-              ></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-1"></div>
+  <!-- Vectorize Sentence -->
+  <div id="vectorize_sentence" class="task">
+    <div class="task-title-area">
+      <div class="task-title-chip">Vectorize Sentence</div>
     </div>
-  </body>
+    <div class="label-text">
+      Put sentence here
+      <textarea class="form-control" id="vec_sin_input" rows="1"></textarea>
+    </div>
+    <div style="margin: 10px 0; text-align: center;">
+      <button id="vectorize_single_sentence" class="btn">↓Vectorize</button>
+    </div>
+    <textarea class="form-control txt_response" id="vec_sin_result_bert" rows="5" readonly></textarea>
+    <div style="margin-top:15px; font-size:13px;">code↓</div>
+    <pre class="code prettyprint lang-py" style="padding-top:15px; padding-left:15px; border: none;">
+from sentence_transformers import SentenceTransformer
+bert = SentenceTransformer("bert-base-nli-mean-tokens")
+bert.encode(['<span id="vec_sin_code"></span>'])
+    </pre>
+  </div>
+  <!-- Vectorize Sentence End-->
+
+  <!-- Vectorize Sentences -->
+  <div id="vectorize_sentences" class="task">
+    <div class="task-title-area">
+      <div class="task-title-chip">Vectorize Sentences</div>
+    </div>
+    <div class="label-text">
+      Put sentences here
+      <textarea class="form-control" id="vec_input" rows="6"></textarea>
+    </div>
+    <div style="margin: 10px 0; text-align: center;">
+      <button id="vectorize_sentences" class="btn">↓Vectorize</button>
+    </div>
+    <div id="vec_plot"></div>
+  </div>
+  <!-- Vectorize Sentences End-->
+
+  <!-- Sentiment Analysis -->
+  <div id="sentiment_analysis" class="task">
+    <div class="task-title-area">
+      <div class="task-title-chip">Sentiment Analysis</div>
+    </div>
+    <div class="label-text">
+      Put sentences here
+      <textarea class="form-control" id="sa_input" rows="1"></textarea>
+    </div>
+    <div style="margin: 10px 0; text-align: center;">
+      <button id="sentiment_analysis" class="btn">↓Sentiment</button>
+    </div>
+    <div class="sa-result">
+      <span id="sa_result_emoji"></span>
+      <span id="sa_result_score"></span>
+    </div>
+  </div>
+  <!-- Sentiment Analysis End-->
+
+  <!-- Next Word Prediction -->
+  <div id="next_word_prediction" class="task">
+    <div class="task-title-area">
+      <div class="task-title-chip">Next Word Prediction</div>
+    </div>
+    <div style="margin: 10px 0;">
+      <div class="label-text">Put sentence here</div>
+      <textarea class="form-control" id="nwp_input" rows="1"></textarea>
+    </div>
+    <div>↓prediction result</div>
+    <textarea class="form-control txt_response" id="nwp_result_bert" rows="5" readonly></textarea>
+  </div>
+  <!-- Next Word Prediction End-->
+
+
+
+</body>
+
 </html>

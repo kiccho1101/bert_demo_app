@@ -1,74 +1,183 @@
-var data = []
-var token = ""
+var data = [];
+var token = "";
 
 jQuery(document).ready(function () {
-    var slider = $('#max_words')
-    slider.on('change mousemove', function (evt) {
-        $('#label_max_words').text('Top k words: ' + slider.val())
-    })
+  let sentences = [
+    "I am eating a piece of bread.",
+    "He is eating pizza.",
+    "I am lying on the bed.",
+    "She is sleeping.",
+    "Bobby was arrested.",
+    "Bobby was unhappy.",
+  ];
+  $("#vec_input").val(sentences.join("\n"));
 
-    var slider_mask = $('#max_words_mask')
-    slider_mask.on('change mousemove', function (evt) {
-        $('#label_max_words').text('Top k words: ' + slider_mask.val())
-    })
+  // Vectorize Sentence
+  $("#vectorize_single_sentence").click(function (e) {
+    const input_text = $("#vec_sin_input").val();
+    if (input_text !== "") {
+      $("#vec_sin_code").text(input_text);
+      $.ajax({
+        url: "/vectorize_sentences",
+        type: "post",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          input_text: input_text,
+        }),
+        beforeSend: function () {
+          $(".overlay").show();
+        },
+        complete: function () {
+          $(".overlay").hide();
+        },
+      })
+        .done(function (jsondata, textStatus, jqXHR) {
+          console.log(jsondata);
+          $("#vec_sin_result_bert").val(
+            `[\n    ${jsondata["bert"][0]
+              .map(function (a) {
+                return String(a);
+              })
+              .join(",\n    ")}\n]`
+          );
+        })
+        .fail(function (jsondata, textStatus, jqXHR) {
+          console.log(jsondata);
+        });
+    }
+  });
 
-    $('#input_text').on('keyup', function (e) {
-        if (e.key == ' ') {
-            $.ajax({
-                url: '/get_end_predictions',
-                type: "post",
-                contentType: "application/json",
-                dataType: "json",
-                data: JSON.stringify({
-                    "input_text": $('#input_text').val(),
-                    "top_k": slider.val(),
-                }),
-                beforeSend: function () {
-                    $('.overlay').show()
-                },
-                complete: function () {
-                    $('.overlay').hide()
-                }
-            }).done(function (jsondata, textStatus, jqXHR) {
-                console.log(jsondata)
-                $('#text_bert').val(jsondata['bert'])
-                $('#text_xlnet').val(jsondata['xlnet'])
-                $('#text_xlm').val(jsondata['xlm'])
-                $('#text_bart').val(jsondata['bart'])
-                $('#text_electra').val(jsondata['electra'])
-                $('#text_roberta').val(jsondata['roberta'])
-            }).fail(function (jsondata, textStatus, jqXHR) {
-                console.log(jsondata)
-            });
-        }
-    })
-
-    $('#btn-process').on('click', function () {
-        $.ajax({
-            url: '/get_mask_predictions',
+  // Vectorize Sentence
+  $("#vectorize_sentences").click(function (e) {
+    const input_text = $("#vec_input").val();
+    if (input_text.length > 0) {
+      const text = input_text.split("\n");
+      $.ajax({
+        url: "/vectorize_sentences",
+        type: "post",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          input_text: input_text,
+        }),
+      })
+        .done(function (jsondata, textStatus, jqXHR) {
+          $.ajax({
+            url: "/umap_comp",
             type: "post",
             contentType: "application/json",
             dataType: "json",
             data: JSON.stringify({
-                "input_text": $('#mask_input_text').val(),
-                "top_k": slider_mask.val(),
+              data: jsondata["bert"],
+              n_neighbors: 2,
+              min_dist: 0.01,
             }),
             beforeSend: function () {
-                $('.overlay').show()
+              $(".overlay").show();
             },
             complete: function () {
-                $('.overlay').hide()
-            }
-        }).done(function (jsondata, textStatus, jqXHR) {
-            console.log(jsondata)
-            $('#mask_text_bert').val(jsondata['bert'])
-            $('#mask_text_xlnet').val(jsondata['xlnet'])
-            $('#mask_text_xlm').val(jsondata['xlm'])
-            $('#mask_text_bart').val(jsondata['bart'])
-            $('#mask_text_electra').val(jsondata['electra'])
-            $('#mask_text_roberta').val(jsondata['roberta'])
-        }).fail(function (jsondata, textStatus, jqXHR) {
-            console.log(jsondata)
+              $(".overlay").hide();
+            },
+          })
+            .done(function (compdata, textStatus, jqXHR) {
+              $("#vec_plot").css("height", "400px");
+              console.log(compdata);
+              const x = [];
+              const y = [];
+              for (const xy of compdata) {
+                x.push(xy[0]);
+                y.push(xy[1]);
+              }
+              const data = [
+                {
+                  x: x,
+                  y: y,
+                  text: text,
+                  type: "scatter",
+                  mode: "markers",
+                },
+              ];
+              const layout = {
+                hovermode: "closest",
+                title: "Plot the vectorized sentences",
+              };
+              Plotly.newPlot("vec_plot", data, layout);
+            })
+            .fail(function (jsondata2, textStatus, jqXHR) {
+              console.log(jsondata2);
+            });
+        })
+        .fail(function (jsondata1, textStatus, jqXHR) {
+          console.log(jsondata1);
         });
-    })
-})
+    }
+  });
+
+  // Sentiment Analysis
+  $("#sentiment_analysis").click(function (e) {
+    const input_text = $("#sa_input").val();
+    if (input_text !== "") {
+      // $("#vec_sin_code").text(input_text);
+      $.ajax({
+        url: "/sentiment_analysis",
+        type: "post",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          input_text: input_text,
+        }),
+        beforeSend: function () {
+          $(".overlay").show();
+        },
+        complete: function () {
+          $(".overlay").hide();
+        },
+      })
+        .done(function (score, textStatus, jqXHR) {
+          let emoji = "";
+          if (score > 0.7) {
+            emoji = "😋";
+          } else if (score < 0.3) {
+            emoji = "😫";
+          } else {
+            emoji = "😃";
+          }
+          $("#sa_result_emoji").text(emoji);
+          $("#sa_result_score").text(String(score));
+        })
+        .fail(function (jsondata, textStatus, jqXHR) {
+          console.log(jsondata);
+        });
+    }
+  });
+
+  // Next Word Prediction
+  $("#nwp_input").on("keyup", function (e) {
+    if (e.key == " ") {
+      $.ajax({
+        url: "/get_end_predictions",
+        type: "post",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          input_text: $("#nwp_input").val(),
+          top_k: 5,
+        }),
+        beforeSend: function () {
+          $(".overlay").show();
+        },
+        complete: function () {
+          $(".overlay").hide();
+        },
+      })
+        .done(function (jsondata, textStatus, jqXHR) {
+          console.log(jsondata);
+          $("#nwp_result_bert").val(jsondata["bert"]);
+        })
+        .fail(function (jsondata, textStatus, jqXHR) {
+          console.log(jsondata);
+        });
+    }
+  });
+});

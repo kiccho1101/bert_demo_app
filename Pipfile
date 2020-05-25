@@ -8,12 +8,17 @@ pylint = "*"
 black = "*"
 flake8 = "*"
 mypy = "*"
+ipykernel = "*"
 
 [packages]
 torch = "*"
 transformers = "*"
 numpy = "*"
 Flask = "*"
+sentence-transformers = "*"
+umap-learn = "*"
+pandas = "*"
+scikit-learn = "*"
 
 [requires]
 python_version = "3.7"

@@ -2,13 +2,46 @@
 import torch
 import string
 
+import numpy as np
+from typing import List, Dict
+from sentence_transformers import SentenceTransformer
 from transformers import BertTokenizer, BertForMaskedLM
+import umap
+import sa_train
 
+print("loading BertTokenizer...")
 bert_tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+print("loading BertForMaskedLM...")
 bert_model = BertForMaskedLM.from_pretrained("bert-base-uncased").eval()
-
+print("loading SentenceTransformer...")
+bert_st = SentenceTransformer("bert-base-nli-mean-tokens")
+print("loading Sentiment Analysis Model (this may take a long time)...")
+sa = sa_train.train_sa_model()
 
 top_k = 10
+
+
+def vectorize_sentences(text_sentence: List[str]) -> Dict[str, List[np.array]]:
+    return {"bert": [nparray.tolist() for nparray in bert_st.encode(text_sentence)]}
+
+
+def sentiment_analysis(text_sentence: str) -> float:
+    text_vectorized = vectorize_sentences([text_sentence])["bert"]
+    score = sa.predict_proba(text_vectorized)[0, 1]
+    return score
+
+
+def umap_comp(
+    data: List[List[float]],
+    n_components: int = 2,
+    n_neighbors: int = 15,
+    min_dist: float = 0.1,
+) -> List[List[float]]:
+    return (
+        umap.UMAP(n_components=n_components, n_neighbors=n_neighbors, min_dist=min_dist)
+        .fit_transform(data)
+        .tolist()
+    )
 
 
 def decode(tokenizer, pred_idx, top_clean):

@@ -1,3 +1,8 @@
 .mypy_cache
 __pycache__
 .vscode
+
+.DS_Store
+*.gz
+*.vocab
+aclImdb
