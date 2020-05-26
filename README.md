@@ -13,16 +13,24 @@ pipenv run python app.py
 
 ## Text Vectorization
 
-![](./.github/vectorize.gif)
+<p align="center">
+  <img src="./.github/vectorize.gif">
+</p>
 
 ## Text Clustering
 
-![](./.github/text_clustering.gif)
+<p align="center">
+  <img src="./.github/text_clustering.gif">
+</p>
 
 ## Sentiment Analysis
 
-![](./.github/sentiment_analysis.gif)
+<p align="center">
+  <img src="./.github/sentiment_analysis.gif">
+</p>
 
 ## Next Word Prediction
 
-![](./.github/nwp.gif)
+<p align="center">
+  <img src="./.github/nwp.gif">
+</p>
