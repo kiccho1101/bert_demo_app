@@ -8,6 +8,16 @@
   /* background: #ccc8; */
 }
 
+.page-title {
+  font-size: 30px;
+  text-align: center;
+  width: 100%;
+  background: #ffa31a;
+  padding: 13px;
+  line-height: 30px;
+  color: white;
+}
+
 .spinner-border {
   top: 50% !important;
   position: fixed;
@@ -30,7 +40,7 @@
 }
 
 .task {
-  margin: 130px 50px;
+  margin: 50px 50px 150px 50px;
   padding: 30px 100px;
   border: 5px solid #dddddd;
   border-radius: 10px;
