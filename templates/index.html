@@ -32,6 +32,9 @@
     <div class="task-title-area">
       <div class="task-title-chip">Vectorize Sentence</div>
     </div>
+    <div style="text-align: center;">
+      <img src="../static/img/vectorize.png" alt="vectorize" style= "width: 100%;">
+    </div>
     <div class="label-text">
       Put sentence here
       <textarea class="form-control" id="vec_sin_input" rows="1"></textarea>
@@ -45,37 +48,44 @@
 from sentence_transformers import SentenceTransformer
 bert = SentenceTransformer("bert-base-nli-mean-tokens")
 bert.encode(['<span id="vec_sin_code"></span>'])
+# => 768-dimension vector 
     </pre>
   </div>
   <!-- Vectorize Sentence End-->
 
-  <!-- Vectorize Sentences -->
+  <!-- Vectorize Multiple Sentences -->
   <div id="vectorize_sentences" class="task">
     <div class="task-title-area">
-      <div class="task-title-chip">Vectorize Sentences</div>
+      <div class="task-title-chip">Vectorize Multiple Sentences</div>
+    </div>
+    <div style="text-align: center;">
+      <img src="../static/img/text_clustering.png" alt="text_clustering" style="width: 100%;">
     </div>
     <div class="label-text">
       Put sentences here
       <textarea class="form-control" id="vec_input" rows="6"></textarea>
     </div>
     <div style="margin: 10px 0; text-align: center;">
-      <button id="vectorize_sentences" class="btn">↓Vectorize</button>
+      <button id="vectorize_sentences_btn" class="btn">↓Vectorize</button>
     </div>
     <div id="vec_plot"></div>
   </div>
-  <!-- Vectorize Sentences End-->
+  <!-- Vectorize Multiple Sentences End-->
 
   <!-- Sentiment Analysis -->
   <div id="sentiment_analysis" class="task">
     <div class="task-title-area">
       <div class="task-title-chip">Sentiment Analysis</div>
     </div>
+    <div style="text-align: center;">
+      <img src="../static/img/sentiment_analysis.png" alt="sentiment_analysis" style="width: 100%;">
+    </div>
     <div class="label-text">
       Put sentences here
       <textarea class="form-control" id="sa_input" rows="1"></textarea>
     </div>
     <div style="margin: 10px 0; text-align: center;">
-      <button id="sentiment_analysis" class="btn">↓Sentiment</button>
+      <button id="sentiment_analysis_btn" class="btn">↓Sentiment</button>
     </div>
     <div class="sa-result">
       <span id="sa_result_emoji"></span>
@@ -88,6 +98,9 @@ bert.encode(['<span id="vec_sin_code"></span>'])
   <div id="next_word_prediction" class="task">
     <div class="task-title-area">
       <div class="task-title-chip">Next Word Prediction</div>
+    </div>
+    <div style="text-align: center;">
+      <img src="../static/img/nwp.png" alt="next_word_prediction" style="width: 100%;">
     </div>
     <div style="margin: 10px 0;">
       <div class="label-text">Put sentence here</div>

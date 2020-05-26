@@ -49,7 +49,7 @@ jQuery(document).ready(function () {
   });
 
   // Vectorize Sentence
-  $("#vectorize_sentences").click(function (e) {
+  $("#vectorize_sentences_btn").click(function (e) {
     const input_text = $("#vec_input").val();
     if (input_text.length > 0) {
       const text = input_text.split("\n");
@@ -81,7 +81,7 @@ jQuery(document).ready(function () {
             },
           })
             .done(function (compdata, textStatus, jqXHR) {
-              $("#vec_plot").css("height", "400px");
+              $("#vec_plot").css("height", "200px");
               console.log(compdata);
               const x = [];
               const y = [];
@@ -115,7 +115,7 @@ jQuery(document).ready(function () {
   });
 
   // Sentiment Analysis
-  $("#sentiment_analysis").click(function (e) {
+  $("#sentiment_analysis_btn").click(function (e) {
     const input_text = $("#sa_input").val();
     if (input_text !== "") {
       // $("#vec_sin_code").text(input_text);

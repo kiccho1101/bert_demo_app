@@ -30,9 +30,9 @@
 }
 
 .task {
-  margin: 30px 10px;
-  padding: 20px 30px;
-  border: 2px solid #dddddd;
+  margin: 130px 50px;
+  padding: 30px 100px;
+  border: 5px solid #dddddd;
   border-radius: 10px;
 }
 .task-title-area {
