@@ -81,7 +81,7 @@ jQuery(document).ready(function () {
             },
           })
             .done(function (compdata, textStatus, jqXHR) {
-              $("#vec_plot").css("height", "200px");
+              $("#vec_plot").css("height", "400px");
               console.log(compdata);
               const x = [];
               const y = [];
